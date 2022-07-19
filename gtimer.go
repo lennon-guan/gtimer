@@ -62,9 +62,9 @@ func Tick(step string) {
 }
 
 func defaultWriteResult(topic string, steps []StepInfo) {
-	fmt.Printf("%s耗时情况：\n", topic)
+	fmt.Printf("Time cost for topic '%s': \n", topic)
 	for i := 1; i < len(steps); i++ {
-		fmt.Printf("\t[%s-%s]耗时:%s\n", steps[i-1].name, steps[i].name, steps[i].at.Sub(steps[i-1].at))
+		fmt.Printf("\t[%s-%s]: %s\n", steps[i-1].name, steps[i].name, steps[i].at.Sub(steps[i-1].at))
 	}
 }
 
