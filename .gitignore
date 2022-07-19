@@ -1,0 +1,5 @@
+pkg
+bin
+*.sw?
+.*.sw?
+.DS_Store
