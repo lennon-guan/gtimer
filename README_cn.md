@@ -22,6 +22,26 @@ timer.End()
 gtimer.Tick("step name") // 自动获取当前goroutine上已经创建好的timer对象，进行打点记录。如果无已创建的timer，该打点无效
 ```
 
+* 自定义结果处理
+
+1. 单独设置结果处理方法
+
+```go
+defer gtimer.Start("job name").EndWithWriter(func(topic string, steps gtimer.Steps) {
+    //TODO process topic and steps
+})
+```
+
+2. 全局替换默认的结果处理方法
+
+```go
+gtimer.SetDefaultWriter(func(topic string, steps gtimer.Steps) {
+    //TODO process topic and steps
+})
+...
+gtimer.Start("job name").End()
+```
+
 ## 例子：
 
 ```go
