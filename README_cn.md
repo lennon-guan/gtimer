@@ -1,8 +1,6 @@
-# gtimer - An easy way to test time cost in golang
+# gtimer - 一个简易的go程序测速工具
 
-[简体中文](README_cn.md)
-
-Example:
+例子：
 
 ```go
 // gtimer_test.go
