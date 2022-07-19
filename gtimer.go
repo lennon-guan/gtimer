@@ -9,11 +9,7 @@ import (
 )
 
 type (
-	StepInfo struct {
-		name string
-		at   time.Time
-	}
-	ResultWriter func(topic string, steps []StepInfo)
+	ResultWriter func(topic string, steps Steps)
 	timer        struct {
 		gid   int64
 		topic string
@@ -23,20 +19,23 @@ type (
 
 var timerMap sync.Map
 
+//Start create a timer and begin recording
 func Start(topic string) *timer {
 	t := &timer{
 		gid:   goid.Get(),
 		topic: topic,
-		steps: []StepInfo{{at: time.Now(), name: "begin"}},
+		steps: []StepInfo{{At: time.Now(), Name: "begin"}},
 	}
 	timerMap.Store(t.gid, t)
 	return t
 }
 
+//End end up the recording, and write the result by the default result writer
 func (t *timer) End() {
 	t.EndWiteWriter(defaultResultWriter)
 }
 
+//End end up the recording, and write the result by the given result writer
 func (t *timer) EndWiteWriter(w ResultWriter) {
 	t.tick("end")
 	if w != nil {
@@ -46,9 +45,10 @@ func (t *timer) EndWiteWriter(w ResultWriter) {
 }
 
 func (t *timer) tick(step string) {
-	t.steps = append(t.steps, StepInfo{at: time.Now(), name: step})
+	t.steps = append(t.steps, StepInfo{At: time.Now(), Name: step})
 }
 
+//Tick
 func Tick(step string) {
 	t, found := timerMap.Load(goid.Get())
 	if !found {
@@ -61,11 +61,16 @@ func Tick(step string) {
 	timer.tick(step)
 }
 
-func defaultWriteResult(topic string, steps []StepInfo) {
-	fmt.Printf("Time cost for topic '%s': \n", topic)
+func defaultWriteResult(topic string, steps Steps) {
+	fmt.Printf("Time cost for topic '%s' total %s: \n", topic, steps.TotalDuration())
 	for i := 1; i < len(steps); i++ {
-		fmt.Printf("\t[%s-%s]: %s\n", steps[i-1].name, steps[i].name, steps[i].at.Sub(steps[i-1].at))
+		fmt.Printf("  |- [%s-%s]: %s\n", steps[i-1].Name, steps[i].Name, steps.DurationBetween(i-1, i))
 	}
 }
 
 var defaultResultWriter = defaultWriteResult
+
+//SetDefaultWriter set default result writer
+func SetDefaultWriter(w ResultWriter) {
+	defaultResultWriter = w
+}
