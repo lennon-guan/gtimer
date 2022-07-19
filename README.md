@@ -1,12 +1,8 @@
-package gtimer_test
+# gtimer - An easy way to test time cost in golang
 
-import (
-	"testing"
-	"time"
+Example:
 
-	"github.com/lennon-guan/gtimer"
-)
-
+```go
 func testFunc() {
 	gtimer.Tick("enter testFunc")
 	time.Sleep(150 * time.Millisecond)
@@ -19,3 +15,4 @@ func TestTimer(t *testing.T) {
 	testFunc()
 	time.Sleep(50 * time.Millisecond)
 }
+```
