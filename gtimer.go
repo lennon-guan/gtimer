@@ -2,6 +2,7 @@ package gtimer
 
 import (
 	"fmt"
+	"math/rand"
 	"sync"
 	"time"
 
@@ -62,9 +63,11 @@ func Tick(step string) {
 }
 
 func defaultWriteResult(topic string, steps Steps) {
-	fmt.Printf("Time cost for topic '%s' total %s: \n", topic, steps.TotalDuration())
+	rc := rand.Intn(10000)
+	fmt.Printf("Time cost for topic '%s@%04d' total %s: \n", topic, rc, steps.TotalDuration())
 	for i := 1; i < len(steps); i++ {
-		fmt.Printf("  |- [%s-%s]: %s\n", steps[i-1].Name, steps[i].Name, steps.DurationBetween(i-1, i))
+		fmt.Printf("  |- [%s@%04d: \"%s\" ~ \"%s\"]: %s\n",
+			topic, rc, steps[i-1].Name, steps[i].Name, steps.DurationBetween(i-1, i))
 	}
 }
 
